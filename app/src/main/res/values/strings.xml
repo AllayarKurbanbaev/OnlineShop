@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">OnlineShopAllayar</string>
+    <string name="login">Login</string>
+    <string name="log_in">Log in to your account</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone">Phone</string>
+    <string name="enter_sms_code">Enter sms code</string>
+    <string name="detail">Detail</string>
+    <string name="product_description">Product description</string>
+    <string name="register">Register</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="home">Home</string>
+    <string name="cart">Cart</string>
+</resources>
