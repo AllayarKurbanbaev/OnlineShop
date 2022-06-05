@@ -10,9 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import uz.gita.onlineshopallayar.R
 import uz.gita.onlineshopallayar.data.ProductData
-import uz.gita.onlineshopallayar.data.remote.model.response.ProductResponse
 import uz.gita.onlineshopallayar.databinding.ScreenAllProductsBinding
 import uz.gita.onlineshopallayar.presentation.ui.adapter.ProductAdapter
 import uz.gita.onlineshopallayar.presentation.viewmodel.ProductViewModel
@@ -34,9 +34,11 @@ class ProductScreen : Fragment(R.layout.screen_all_products) {
             viewModel.loadData()
         }
 
-        adapter.setOnAddToCartClickListener {
-            Toast.makeText(requireContext(), it.id.toString(), Toast.LENGTH_SHORT).show()
+
+        adapter.setOnButtonAddToCartListener {
+            viewModel.addToCart(it)
         }
+
         adapter.setOnItemClickListener { productResponse, position ->
             viewModel.saveProductId(productResponse.id)
             viewModel.openDetail()
@@ -47,7 +49,10 @@ class ProductScreen : Fragment(R.layout.screen_all_products) {
         viewModel.loadLiveData.observe(viewLifecycleOwner, loadObserver)
         viewModel.progressLiveData.observe(viewLifecycleOwner, progressLiveData)
         viewModel.openDetailScreenLiveData.observe(this@ProductScreen, openDetailObserver)
+
     }
+
+
 
     private val openDetailObserver = Observer<Unit> {
         findNavController().navigate(R.id.action_mainScreen_to_detailScreen)

@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import uz.gita.onlineshopallayar.data.ProductData
-import uz.gita.onlineshopallayar.data.remote.model.request.CartRequest
-import uz.gita.onlineshopallayar.data.remote.model.response.ProductResponse
 import uz.gita.onlineshopallayar.domain.usecase.ProductUseCase
 import uz.gita.onlineshopallayar.presentation.viewmodel.ProductViewModel
 import javax.inject.Inject
@@ -23,6 +21,7 @@ class ProductViewModelImpl @Inject constructor(
     override val openDetailScreenLiveData = MutableLiveData<Unit>()
     override val addCartLiveData = MutableLiveData<String>()
     override val loadLiveData = MutableLiveData<List<ProductData>>()
+
 
     init {
         loadData()
@@ -42,9 +41,10 @@ class ProductViewModelImpl @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    override fun addToCart(cartRequest: CartRequest) {
+
+    override fun addToCart(product: ProductData) {
         progressLiveData.value = true
-        useCase.addNewCart(cartRequest).onEach {
+        useCase.addProductToCart(product).onEach {
             progressLiveData.value = false
             it.onSuccess {
                 addCartLiveData.value = "Added"
@@ -52,7 +52,7 @@ class ProductViewModelImpl @Inject constructor(
             it.onFailure { throwable ->
                 errorLiveData.value = throwable.message
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     override fun openDetail() {

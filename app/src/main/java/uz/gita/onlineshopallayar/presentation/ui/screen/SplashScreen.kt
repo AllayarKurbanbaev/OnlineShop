@@ -22,8 +22,9 @@ class SplashScreen : Fragment(R.layout.screen_splash) {
     private val viewModel: SplashViewModel by viewModels<SplashViewModelImpl>()
 
 
+    @SuppressLint("FragmentLiveDataObserve")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.openNextScreenLiveData.observe(viewLifecycleOwner, openNextObserver)
+        viewModel.openNextScreenLiveData.observe(this@SplashScreen, openNextObserver)
     }
 
     private val openNextObserver = Observer<Boolean> {

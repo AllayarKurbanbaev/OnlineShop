@@ -1,6 +1,8 @@
 package uz.gita.onlineshopallayar.data.repository.app
 
 import retrofit2.Response
+import uz.gita.onlineshopallayar.data.ProductData
+import uz.gita.onlineshopallayar.data.locale.entities.CartEntity
 import uz.gita.onlineshopallayar.data.locale.entities.ProductResponseEntity
 import uz.gita.onlineshopallayar.data.remote.model.request.CartRequest
 import uz.gita.onlineshopallayar.data.remote.model.response.CartResponse
@@ -30,5 +32,22 @@ interface AppRepository {
 
     suspend fun deleteCart(id: Int): Response<CartResponse>
 
+
+    suspend fun getAllProductCartByUserId(): List<CartEntity>
+
+    suspend fun updateProductCart(product: CartEntity)
+
+    suspend fun deleteAllProductCart()
+
+    suspend fun deleteProductCart(product: CartEntity)
+
+    suspend fun addProductToCart(product: ProductData)
+
     fun saveProductID(id: Int)
+
+    suspend fun increaseProductCount(id: Int)
+
+    suspend fun decreaseProductCount(id: Int)
+
+    suspend fun getProductCount(id: Int) : Int
 }

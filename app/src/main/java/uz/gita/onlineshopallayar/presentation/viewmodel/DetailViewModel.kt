@@ -13,6 +13,6 @@ interface DetailViewModel {
 
 
     fun back()
-    fun addToCart()
+    fun addToCart(product: ProductData)
     fun loadData()
 }

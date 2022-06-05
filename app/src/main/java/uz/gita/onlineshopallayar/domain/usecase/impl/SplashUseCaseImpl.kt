@@ -9,7 +9,6 @@ class SplashUseCaseImpl @Inject constructor(
     private val repository: AuthRepository
 ) : SplashUseCase {
     override fun checking(): Boolean {
-        Timber.tag("TTT").d(repository.check().toString())
         return repository.check()
     }
 

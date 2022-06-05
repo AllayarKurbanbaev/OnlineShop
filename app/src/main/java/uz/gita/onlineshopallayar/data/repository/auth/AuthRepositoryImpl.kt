@@ -19,7 +19,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun check(): Boolean {
-        Timber.tag("TTT").d(preference.userId.toString())
+
         return preference.userId != 0
     }
 

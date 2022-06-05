@@ -7,8 +7,6 @@ import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 import uz.gita.onlineshopallayar.data.ProductData
 import uz.gita.onlineshopallayar.data.locale.entities.toProductData
-import uz.gita.onlineshopallayar.data.remote.model.request.CartRequest
-import uz.gita.onlineshopallayar.data.remote.model.response.CartResponse
 import uz.gita.onlineshopallayar.data.remote.model.response.toProductData
 import uz.gita.onlineshopallayar.data.remote.model.response.toProductEntity
 import uz.gita.onlineshopallayar.data.repository.app.AppRepository
@@ -40,16 +38,8 @@ class ProductUseCaseImpl @Inject constructor(
         emit(Result.failure(Exception(it)))
     }.flowOn(Dispatchers.IO)
 
-    override fun addNewCart(cartRequest: CartRequest) = flow<Result<CartResponse>> {
-
-        val response = repository.addNewCart(cartRequest)
-        if (response.isSuccessful) {
-            response.body()?.let {
-                emit(Result.success(it))
-            }
-        } else {
-            emit(Result.failure(Exception("Cart qoshilmadi")))
-        }
+    override fun addProductToCart(product: ProductData) = flow<Result<Unit>> {
+        emit(Result.success(repository.addProductToCart(product)))
     }.catch {
         emit(Result.failure(Exception(it)))
     }.flowOn(Dispatchers.IO)

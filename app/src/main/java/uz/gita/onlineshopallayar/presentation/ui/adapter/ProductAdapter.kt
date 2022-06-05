@@ -13,8 +13,11 @@ import uz.gita.onlineshopallayar.databinding.ItemProductBinding
 class ProductAdapter :
     ListAdapter<ProductData, ProductAdapter.ProductViewHolder>(ProductDiffUtil) {
 
+
     private var onItemClickListener: ((ProductData, Int) -> Unit)? = null
-    private var onAddToCartClickListener: ((ProductData) -> Unit)? = null
+    private var OnButtonAddToCartListener: ((ProductData) -> Unit)? = null
+//    private var minusListener: ((Int) -> Unit)? = null
+//    private var plusListener: ((Int) -> Unit)? = null
 
     inner class ProductViewHolder(private val binding: ItemProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -28,8 +31,24 @@ class ProductAdapter :
             }
 
             binding.buttonAddToCart.setOnClickListener {
-                onAddToCartClickListener?.invoke(getItem(absoluteAdapterPosition))
+                OnButtonAddToCartListener?.invoke(getItem(absoluteAdapterPosition))
             }
+
+
+//            binding.buttonPlus.setOnClickListener {
+//                var count = binding.textPieces.text.toString().toInt()
+//                count++
+//                binding.productPrice.text =
+//                    (getItem(absoluteAdapterPosition).price * count).toString()
+//                binding.textPieces.text = count.toString()
+//                plusListener?.invoke(count)
+//            }
+//
+//            binding.buttonCheck.setOnClickListener {
+//                binding.buttonAddToCart.visibility = View.VISIBLE
+//                binding.containerPieces.visibility = View.GONE
+//                checkListener?.invoke(getItem(absoluteAdapterPosition))
+//            }
         }
 
         fun bind() {
@@ -39,6 +58,7 @@ class ProductAdapter :
                 Glide
                     .with(binding.productImage)
                     .load(image)
+                    .placeholder(R.drawable.placeholder)
                     .into(binding.productImage)
             }
         }
@@ -74,8 +94,17 @@ class ProductAdapter :
         onItemClickListener = block
     }
 
-    fun setOnAddToCartClickListener(block: (ProductData) -> Unit) {
-        onAddToCartClickListener = block
+
+    fun setOnButtonAddToCartListener(block: (ProductData) -> Unit) {
+        OnButtonAddToCartListener = block
     }
+
+//    fun setMinusListener(block: (Int) -> Unit) {
+//        minusListener = block
+//    }
+//
+//    fun setPlusListener(block: (Int) -> Unit) {
+//        plusListener = block
+//    }
 
 }

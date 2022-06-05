@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import uz.gita.onlineshopallayar.data.ProductData
-import uz.gita.onlineshopallayar.data.remote.model.response.ProductResponse
 import uz.gita.onlineshopallayar.domain.usecase.DetailUseCase
 import uz.gita.onlineshopallayar.presentation.viewmodel.DetailViewModel
 import javax.inject.Inject
@@ -28,9 +27,19 @@ class DetailViewModelImpl @Inject constructor(
         onBackPressedLiveData.value = Unit
     }
 
-    override fun addToCart() {
-
+    override fun addToCart(product: ProductData) {
+        progressLiveData.value = true
+        useCase.addProductToCart(product).onEach {
+            progressLiveData.value = false
+            it.onSuccess {
+                addToCardLiveData.value = "Added"
+            }
+            it.onFailure { throwable ->
+                errorLiveData.value = throwable.message
+            }
+        }.launchIn(viewModelScope)
     }
+
 
     override fun loadData() {
         progressLiveData.value = true

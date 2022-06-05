@@ -2,8 +2,11 @@ package uz.gita.onlineshopallayar.data.repository.app
 
 import retrofit2.Response
 import timber.log.Timber
+import uz.gita.onlineshopallayar.data.ProductData
 import uz.gita.onlineshopallayar.data.locale.SharedPref
-import uz.gita.onlineshopallayar.data.locale.dao.Dao
+import uz.gita.onlineshopallayar.data.locale.dao.CartDao
+import uz.gita.onlineshopallayar.data.locale.dao.ProductDao
+import uz.gita.onlineshopallayar.data.locale.entities.CartEntity
 import uz.gita.onlineshopallayar.data.locale.entities.ProductResponseEntity
 import uz.gita.onlineshopallayar.data.remote.api.Api
 import uz.gita.onlineshopallayar.data.remote.model.request.CartRequest
@@ -14,30 +17,30 @@ import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
     private val api: Api,
-    private val dao: Dao,
+    private val productDao: ProductDao,
+    private val cartDao: CartDao,
     private val preferences: SharedPref
 ) : AppRepository {
+
+
     override suspend fun getAllProductsFromNetwork(): Response<List<ProductResponse>> {
-        Timber.tag("SSS").d(api.getAllProducts().toString())
         return api.getAllProducts()
     }
 
     override suspend fun getAllProductsFromLocal(): List<ProductResponseEntity> {
-        return dao.getAllProducts()
+        return productDao.getAllProducts()
     }
 
     override suspend fun insertAllProducts(list: List<ProductResponseEntity>) {
-        dao.deleteAllProducts()
-        dao.insert(list)
+        productDao.deleteAllProducts()
+        productDao.insert(list)
     }
 
     override suspend fun getSingleProductFromLocal(): ProductResponseEntity {
-        return dao.getProductById(preferences.productId)
+        return productDao.getProductById(preferences.productId)
     }
 
     override suspend fun getSingleProductFromNetwork(): Response<ProductResponse> {
-//        Timber.tag("AAA").d(api.getSingleProduct(preferense.productId).toString())
-        Timber.tag("AAA").d(preferences.productId.toString())
         return api.getSingleProduct("/products/${preferences.productId}")
     }
 
@@ -71,9 +74,56 @@ class AppRepositoryImpl @Inject constructor(
         return api.deleteCart("/carts/$id")
     }
 
+    override suspend fun getAllProductCartByUserId(): List<CartEntity> {
+        val response = cartDao.getAllCartProductsByUserId(preferences.userId)
+        Timber.tag("TTT").d(response.toString())
+        return response
+    }
+
+    override suspend fun updateProductCart(product: CartEntity) {
+        return cartDao.update(product)
+    }
+
+    override suspend fun deleteAllProductCart() {
+        return cartDao.deleteAllProductByUserId(preferences.userId)
+    }
+
+    override suspend fun deleteProductCart(product: CartEntity) {
+        return cartDao.delete(product)
+    }
+
+    override suspend fun addProductToCart(product: ProductData) {
+
+        Timber.tag("ZZZ").d(product.toString())
+
+        val model: CartEntity = CartEntity(
+            product.id,
+            product.title,
+            product.description,
+            product.price,
+            preferences.userId,
+            1,
+            product.image
+        )
+
+
+        return cartDao.insert(model)
+    }
+
     override fun saveProductID(id: Int) {
-        Timber.tag("AAA").d(id.toString())
         preferences.productId = id
+    }
+
+    override suspend fun increaseProductCount(id: Int) {
+        return cartDao.increaseProductCount(id)
+    }
+
+    override suspend fun decreaseProductCount(id: Int) {
+        return cartDao.decreaseProductCount(id)
+    }
+
+    override suspend fun getProductCount(id: Int): Int {
+        return cartDao.getCurrentProductCount(id)
     }
 
 

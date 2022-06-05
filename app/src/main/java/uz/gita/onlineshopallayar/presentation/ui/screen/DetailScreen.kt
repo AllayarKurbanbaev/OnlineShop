@@ -21,17 +21,24 @@ class DetailScreen : Fragment(R.layout.screen_detail) {
 
     private val binding by viewBinding(ScreenDetailBinding::bind)
     private val viewModel: DetailViewModel by viewModels<DetailViewModelImpl>()
+    private  var model : ProductData ?= null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
 
         viewModel.loadData()
 
+        swipeRefresh.setOnRefreshListener {
+            viewModel.loadData()
+        }
+
         backButton.setOnClickListener {
             viewModel.back()
         }
         addToCard.setOnClickListener {
-            viewModel.addToCart()
+            if(model != null){
+            viewModel.addToCart(model!!)
+            }
         }
         viewModel.progressLiveData.observe(viewLifecycleOwner, progressObserver)
         viewModel.errorLiveData.observe(viewLifecycleOwner, errorObserver)
@@ -44,15 +51,16 @@ class DetailScreen : Fragment(R.layout.screen_detail) {
         findNavController().popBackStack()
     }
     private val addToCardObserver = Observer<String> {
-
+        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
     }
     private val loadObserver = Observer<ProductData> {
+        model = it
         binding.cost.text = it.price.toString()
         binding.title.text = it.title
         binding.tvDescription.text = it.description
-        Glide
-            .with(binding.imageView)
+        Glide.with(binding.imageView)
             .load(it.image)
+            .placeholder(R.drawable.placeholder)
             .into(binding.imageView)
     }
 

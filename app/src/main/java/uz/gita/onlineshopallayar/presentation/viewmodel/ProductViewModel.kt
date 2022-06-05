@@ -2,9 +2,6 @@ package uz.gita.onlineshopallayar.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import uz.gita.onlineshopallayar.data.ProductData
-import uz.gita.onlineshopallayar.data.remote.model.request.CartRequest
-import uz.gita.onlineshopallayar.data.remote.model.response.CartResponse
-import uz.gita.onlineshopallayar.data.remote.model.response.ProductResponse
 
 interface ProductViewModel {
     val progressLiveData: LiveData<Boolean>
@@ -14,7 +11,8 @@ interface ProductViewModel {
     val loadLiveData: LiveData<List<ProductData>>
 
     fun loadData()
-    fun addToCart(cartRequest: CartRequest)
+
+    fun addToCart(product: ProductData)
     fun openDetail()
-    fun saveProductId(id : Int)
+    fun saveProductId(id: Int)
 }

@@ -11,10 +11,8 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="@dimen/margin_very_small"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="?android:selectableItemBackgroundBorderless"
         android:padding="@dimen/padding_standard"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,14 +45,15 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="0dp">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardImageView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_small"
                     app:cardCornerRadius="@dimen/margin_small"
+                    app:layout_constraintBottom_toTopOf="@id/title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -63,8 +62,7 @@
                         android:id="@+id/imageView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/image_grilled_fish"
-                        android:scaleType="centerCrop" />
+                        android:background="@color/white" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView
@@ -112,8 +110,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_standard"
                     android:layout_marginVertical="16dp"
-                    android:justificationMode="inter_word"
-                    android:text="Description"
                     android:textColor="@color/colorPrimaryLight"
                     android:textSize="@dimen/text_size_description"
                     app:layout_constraintTop_toBottomOf="@id/tvTitle" />
@@ -140,6 +136,7 @@
         app:cornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/swipeRefresh" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
