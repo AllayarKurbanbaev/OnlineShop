@@ -18,10 +18,8 @@ class ProductViewModelImpl @Inject constructor(
 ) : ViewModel(), ProductViewModel {
     override val progressLiveData = MutableLiveData<Boolean>()
     override val errorLiveData = MutableLiveData<String>()
-    override val openDetailScreenLiveData = MutableLiveData<Unit>()
     override val addCartLiveData = MutableLiveData<String>()
     override val loadLiveData = MutableLiveData<List<ProductData>>()
-
 
     init {
         loadData()
@@ -53,13 +51,5 @@ class ProductViewModelImpl @Inject constructor(
                 errorLiveData.value = throwable.message
             }
         }.launchIn(viewModelScope)
-    }
-
-    override fun openDetail() {
-        openDetailScreenLiveData.value = Unit
-    }
-
-    override fun saveProductId(id: Int) {
-        useCase.saveProductId(id)
     }
 }

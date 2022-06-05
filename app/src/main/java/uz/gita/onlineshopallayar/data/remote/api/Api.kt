@@ -12,9 +12,6 @@ interface Api {
     @GET("/products")
     suspend fun getAllProducts(): Response<List<ProductResponse>>
 
-    @GET
-    suspend fun getSingleProduct(@Url url : String): Response<ProductResponse>
-
     @GET("/products/categories")
     suspend fun getAllCategories(): Response<CategoryResponse>
 

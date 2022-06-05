@@ -43,9 +43,4 @@ class ProductUseCaseImpl @Inject constructor(
     }.catch {
         emit(Result.failure(Exception(it)))
     }.flowOn(Dispatchers.IO)
-
-    override fun saveProductId(id: Int) {
-        repository.saveProductID(id)
-    }
-
 }

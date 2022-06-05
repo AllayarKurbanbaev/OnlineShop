@@ -36,15 +36,6 @@ class AppRepositoryImpl @Inject constructor(
         productDao.insert(list)
     }
 
-    override suspend fun getSingleProductFromLocal(): ProductResponseEntity {
-        return productDao.getProductById(preferences.productId)
-    }
-
-    override suspend fun getSingleProductFromNetwork(): Response<ProductResponse> {
-        return api.getSingleProduct("/products/${preferences.productId}")
-    }
-
-
     override suspend fun getAllCategories(): Response<CategoryResponse> {
         return api.getAllCategories()
     }
@@ -109,22 +100,4 @@ class AppRepositoryImpl @Inject constructor(
 
         return cartDao.insert(model)
     }
-
-    override fun saveProductID(id: Int) {
-        preferences.productId = id
-    }
-
-    override suspend fun increaseProductCount(id: Int) {
-        return cartDao.increaseProductCount(id)
-    }
-
-    override suspend fun decreaseProductCount(id: Int) {
-        return cartDao.decreaseProductCount(id)
-    }
-
-    override suspend fun getProductCount(id: Int): Int {
-        return cartDao.getCurrentProductCount(id)
-    }
-
-
 }

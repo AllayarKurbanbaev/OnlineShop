@@ -3,7 +3,6 @@ package uz.gita.onlineshopallayar.presentation.ui.screen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,6 +15,7 @@ import uz.gita.onlineshopallayar.data.remote.model.request.LoginRequest
 import uz.gita.onlineshopallayar.databinding.ScreenSigninBinding
 import uz.gita.onlineshopallayar.presentation.viewmodel.SignInViewModel
 import uz.gita.onlineshopallayar.presentation.viewmodel.impl.SignInViewModelImpl
+import uz.gita.onlineshopallayar.utils.showToast
 
 @AndroidEntryPoint
 class SignInScreen : Fragment(R.layout.screen_signin) {
@@ -48,13 +48,13 @@ class SignInScreen : Fragment(R.layout.screen_signin) {
             )
         }
 
-        viewModel.errorLiveData.observe(viewLifecycleOwner, errorObserver)
+        viewModel.errorLiveData.observe(this@SignInScreen, errorObserver)
         viewModel.loginButtonLiveData.observe(viewLifecycleOwner, loginButtonObserver)
         viewModel.progressLiveData.observe(viewLifecycleOwner, progressObserver)
         viewModel.openMainScreenLiveData.observe(this@SignInScreen, openMainScreenObserver)
     }
 
-    private fun check(){
+    private fun check() {
         binding.buttonLogin.isEnabled = username && password
     }
 
@@ -63,7 +63,7 @@ class SignInScreen : Fragment(R.layout.screen_signin) {
     }
 
     private val errorObserver = Observer<String> {
-        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+        showToast(it)
     }
     private val loginButtonObserver = Observer<String> {
 

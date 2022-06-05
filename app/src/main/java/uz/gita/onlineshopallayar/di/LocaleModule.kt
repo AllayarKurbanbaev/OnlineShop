@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import uz.gita.onlineshopallayar.data.locale.Database
+import uz.gita.onlineshopallayar.data.locale.MyDatabase
 import uz.gita.onlineshopallayar.data.locale.dao.CartDao
 import uz.gita.onlineshopallayar.data.locale.dao.ProductDao
 import javax.inject.Singleton
@@ -17,12 +17,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class LocaleModule {
     @[Provides Singleton]
-    fun getDatabase(@ApplicationContext context: Context): Database =
-        Room.databaseBuilder(context, Database::class.java, "OnlineShopDatabase").build()
+    fun getDatabase(@ApplicationContext context: Context): MyDatabase =
+        Room.databaseBuilder(context, MyDatabase::class.java, "MyDatabase").build()
 
     @[Provides Singleton]
-    fun getProductDao(database: Database): ProductDao = database.getProductDao()
+    fun getProductDao(database: MyDatabase): ProductDao = database.getProductDao()
 
     @[Provides Singleton]
-    fun getCartDao(database: Database): CartDao = database.getCartDao()
+    fun getCartDao(database: MyDatabase): CartDao = database.getCartDao()
 }

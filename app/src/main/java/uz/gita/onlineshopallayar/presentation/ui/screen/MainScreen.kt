@@ -8,8 +8,8 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import uz.gita.onlineshopallayar.R
+import uz.gita.onlineshopallayar.app.App
 import uz.gita.onlineshopallayar.databinding.ScreenMainBinding
 import uz.gita.onlineshopallayar.presentation.ui.adapter.MainAdapter
 import uz.gita.onlineshopallayar.presentation.viewmodel.MainViewModel
@@ -24,8 +24,11 @@ class MainScreen : Fragment(R.layout.screen_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.signOutLiveData.observe(this@MainScreen) {
-            findNavController().navigate(R.id.action_mainScreen_to_signInScreen)
+        viewModel.signOutLiveData.observe(this@MainScreen) { findNavController().navigate(R.id.signInScreen) }
+        App.openDetailScreenLiveData.observe(this@MainScreen) {
+            it?.let {
+                findNavController().navigate(MainScreenDirections.actionMainScreenToDetailScreen(it))
+            }
         }
     }
 
@@ -34,25 +37,20 @@ class MainScreen : Fragment(R.layout.screen_main) {
         viewpagerMain.isUserInputEnabled = false
         viewpagerMain.adapter = adapter
 
-        actionBar.logOut.setOnClickListener {
-            viewModel.onClickSignOut()
-        }
-
+        actionBar.logOut.setOnClickListener { viewModel.onClickSignOut() }
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
                     viewModel.onMenuSelected(0, it.title.toString())
-                    true
                 }
                 else -> {
                     viewModel.onMenuSelected(1, it.title.toString())
-                    true
                 }
             }
+            true
         }
 
         viewModel.navigateNextScreenLiveData.observe(viewLifecycleOwner, navigateNextScreenObserver)
-
         viewModel.messageLiveData.observe(viewLifecycleOwner, messageObserver)
         viewModel.toolbarTitleLiveData.observe(viewLifecycleOwner, toolbarTitleObserver)
     }
@@ -66,21 +64,5 @@ class MainScreen : Fragment(R.layout.screen_main) {
     }
     private val navigateNextScreenObserver = Observer<Int> {
         binding.viewpagerMain.setCurrentItem(it, true)
-    }
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Timber.tag("onDestroyView()")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Timber.d("onPause")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Timber.d("onResume")
     }
 }

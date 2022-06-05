@@ -15,37 +15,42 @@ import uz.gita.onlineshopallayar.databinding.ItemCartBinding
 class CartAdapter : ListAdapter<CartEntity, CartAdapter.CartViewHolder>(CartDiffUtil) {
     private var minusListener: ((Int) -> Unit)? = null
     private var plusListener: ((Int) -> Unit)? = null
-    private var deleteListener: ((CartEntity) -> Unit)? = null
+    private var deleteListener: ((CartEntity, Int) -> Unit)? = null
 
     inner class CartViewHolder(private val binding: ItemCartBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            /*binding.root.setOnClickListener {
-                Timber.tag("KKK").d("absoluteAdapterPosition = $absoluteAdapterPosition")
-            }*/
+
             binding.buttonMinus.setOnClickListener {
-                val model = getItem(absoluteAdapterPosition)
-                if (model.quantity >= 1) {
-                    minusListener?.invoke(model.id)
+                if (getItem(absoluteAdapterPosition).quantity > 1) {
+                    minusListener?.invoke(absoluteAdapterPosition)
                 }
             }
 
             binding.buttonAdd.setOnClickListener {
-                val model = getItem(absoluteAdapterPosition)
-                plusListener?.invoke(getItem(absoluteAdapterPosition).id)
+                if (!binding.buttonMinus.isEnabled) {
+                    binding.buttonMinus.isEnabled = true
+                }
+                plusListener?.invoke(absoluteAdapterPosition)
             }
 
             binding.buttonDelete.setOnClickListener {
-                Timber.tag("KKK").d("absoluteAdapterPosition = $absoluteAdapterPosition")
-                deleteListener?.invoke(getItem(absoluteAdapterPosition))
+                deleteListener?.invoke(
+                    getItem(absoluteAdapterPosition),
+                    absoluteAdapterPosition
+                )
             }
         }
 
         fun bind() {
+            if (getItem(absoluteAdapterPosition).quantity == 1) {
+                binding.buttonMinus.isEnabled = false
+            }
             getItem(absoluteAdapterPosition).apply {
+                binding.textPriceTitle.text = "Price : ${productPrice}$"
                 binding.productName.text = productName
-                binding.textPrice.text = productPrice.toString()
+                binding.textPrice.text = "${quantity * productPrice}$"
                 binding.textPieces.text = quantity.toString()
                 Glide.with(binding.productImage)
                     .load(image)
@@ -55,11 +60,12 @@ class CartAdapter : ListAdapter<CartEntity, CartAdapter.CartViewHolder>(CartDiff
         }
     }
 
-    private object CartDiffUtil : DiffUtil.ItemCallback<CartEntity>() {
+    object CartDiffUtil : DiffUtil.ItemCallback<CartEntity>() {
         override fun areItemsTheSame(
             oldItem: CartEntity,
             newItem: CartEntity
         ): Boolean {
+            Timber.tag("DDD").d("oldItem.id == newItem.id -> ${oldItem.id == newItem.id}")
             return oldItem.id == newItem.id
         }
 
@@ -74,9 +80,6 @@ class CartAdapter : ListAdapter<CartEntity, CartAdapter.CartViewHolder>(CartDiff
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         return CartViewHolder(
-            /*ItemCartBinding.bind(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_cart, parent, false)
-            )*/
             ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
@@ -89,7 +92,7 @@ class CartAdapter : ListAdapter<CartEntity, CartAdapter.CartViewHolder>(CartDiff
         minusListener = block
     }
 
-    fun setDeleteListener(block: (CartEntity) -> Unit) {
+    fun setDeleteListener(block: (CartEntity, Int) -> Unit) {
         deleteListener = block
     }
 

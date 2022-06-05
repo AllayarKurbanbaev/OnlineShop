@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.onEach
 import uz.gita.onlineshopallayar.data.locale.entities.CartEntity
 import uz.gita.onlineshopallayar.domain.usecase.CartUseCase
 import uz.gita.onlineshopallayar.presentation.viewmodel.CartViewModel
+import uz.gita.onlineshopallayar.utils.isConnected
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,66 +17,57 @@ class CartViewModelImpl @Inject constructor(
     private val useCase: CartUseCase
 ) : ViewModel(), CartViewModel {
     override val errorLiveData = MutableLiveData<String>()
-    override val progressLiveData = MutableLiveData<Boolean>()
     override val loadLiveData = MutableLiveData<List<CartEntity>>()
     override val orderLiveData = MutableLiveData<String>()
     override val deleteLiveData = MutableLiveData<String>()
     override val messageLiveData = MutableLiveData<String>()
+    private val list = ArrayList<CartEntity>()
 
     override fun order() {
-        progressLiveData.value = true
-        useCase.order().onEach {
-            progressLiveData.value = false
-            it.onSuccess {
-                load()
-                orderLiveData.value = "Ordered"
-            }
+        if (isConnected()) {
+            useCase.order().onEach {
+                it.onSuccess {
+                    load()
+                    orderLiveData.value = "Ordered"
+                }
+                it.onFailure { throwable ->
+                    errorLiveData.value = throwable.message
+                }
+            }.launchIn(viewModelScope)
+        } else messageLiveData.value = "Not connection network"
+    }
+
+    override fun plusClick(pos: Int) {
+        list[pos].quantity++
+        loadLiveData.value = list
+
+        useCase.updateProductCart(list[pos]).onEach {
             it.onFailure { throwable ->
+                list[pos].quantity--
+                loadLiveData.value = list
                 errorLiveData.value = throwable.message
             }
         }.launchIn(viewModelScope)
     }
 
-    override fun check(product: CartEntity) {
-        progressLiveData.value = true
-        useCase.updateProductCart(product).onEach {
-            progressLiveData.value = false
-            it.onSuccess {
-                messageLiveData.value = "Update"
-            }
+    override fun minusClick(pos: Int) {
+        list[pos].quantity--
+        loadLiveData.value = list
+        useCase.updateProductCart(list[pos]).onEach {
             it.onFailure { throwable ->
+                list[pos].quantity++
+                loadLiveData.value = list
                 errorLiveData.value = throwable.message
             }
         }.launchIn(viewModelScope)
     }
 
-    override fun plusClick(id: Int) {
-        useCase.increaseProductCount(id).onEach {
-            it.onSuccess {
-                load()
-            }
-            it.onFailure { throwable ->
-                errorLiveData.value = throwable.message
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    override fun minusClick(id: Int) {
-        useCase.decreaseProductCount(id).onEach {
-            it.onSuccess {
-                load()
-            }
-            it.onFailure { throwable ->
-                errorLiveData.value = throwable.message
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    override fun delete(product: CartEntity) {
+    override fun delete(product: CartEntity, pos: Int) {
         useCase.deleteProductID(product).onEach {
             it.onSuccess {
                 deleteLiveData.value = "Deleted"
-                load()
+                list.removeAt(pos)
+                loadLiveData.value = list
             }
             it.onFailure { throwable ->
                 errorLiveData.value = throwable.message
@@ -84,11 +76,11 @@ class CartViewModelImpl @Inject constructor(
     }
 
     override fun load() {
-        progressLiveData.value = true
         useCase.getUserCarts().onEach {
-            progressLiveData.value = false
             it.onSuccess { response ->
-                loadLiveData.value = response
+                list.clear()
+                list.addAll(response)
+                loadLiveData.value = list
             }
             it.onFailure { throwable ->
                 errorLiveData.value = throwable.message

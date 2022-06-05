@@ -53,25 +53,15 @@
         android:name="uz.gita.onlineshopallayar.presentation.ui.screen.MainScreen"
         android:label="MainScreen" >
         <action
-            android:id="@+id/action_mainScreen_to_signInScreen"
-            app:destination="@id/signInScreen"
-            app:popUpTo="@id/mainScreen"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_mainScreen_to_detailScreen"
             app:destination="@id/detailScreen" />
-        <action
-            android:id="@+id/action_mainScreen_to_signInScreen2"
-            app:destination="@id/signInScreen"
-            app:popUpTo="@id/mainScreen"
-            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/detailScreen"
         android:name="uz.gita.onlineshopallayar.presentation.ui.screen.DetailScreen"
         android:label="DetailScreen" >
         <argument
-            android:name="id"
-            app:argType="integer" />
+            android:name="data"
+            app:argType="uz.gita.onlineshopallayar.data.ProductData" />
     </fragment>
 </navigation>

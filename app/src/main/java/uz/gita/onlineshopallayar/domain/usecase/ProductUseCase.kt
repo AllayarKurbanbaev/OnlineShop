@@ -8,7 +8,4 @@ interface ProductUseCase {
     fun getAllProduct(): Flow<Result<List<ProductData>>>
 
     fun addProductToCart(product: ProductData): Flow<Result<Unit>>
-
-    fun saveProductId(id: Int)
-
 }

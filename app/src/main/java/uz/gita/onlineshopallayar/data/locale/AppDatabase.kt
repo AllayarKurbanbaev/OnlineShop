@@ -9,10 +9,13 @@ import uz.gita.onlineshopallayar.data.locale.entities.ProductResponseEntity
 
 @Database(
     entities = [ProductResponseEntity::class, CartEntity::class],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
-abstract class Database : RoomDatabase() {
+
+abstract class MyDatabase : RoomDatabase() {
     abstract fun getProductDao(): ProductDao
-    abstract fun getCartDao() : CartDao
+    abstract fun getCartDao(): CartDao
 }
+
+

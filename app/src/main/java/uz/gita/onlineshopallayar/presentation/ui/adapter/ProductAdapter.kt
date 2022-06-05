@@ -14,10 +14,8 @@ class ProductAdapter :
     ListAdapter<ProductData, ProductAdapter.ProductViewHolder>(ProductDiffUtil) {
 
 
-    private var onItemClickListener: ((ProductData, Int) -> Unit)? = null
-    private var OnButtonAddToCartListener: ((ProductData) -> Unit)? = null
-//    private var minusListener: ((Int) -> Unit)? = null
-//    private var plusListener: ((Int) -> Unit)? = null
+    private var onItemClickListener: ((ProductData) -> Unit)? = null
+    private var onButtonAddToCartListener: ((ProductData) -> Unit)? = null
 
     inner class ProductViewHolder(private val binding: ItemProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -25,30 +23,13 @@ class ProductAdapter :
         init {
             binding.root.setOnClickListener {
                 onItemClickListener?.invoke(
-                    getItem(absoluteAdapterPosition),
-                    absoluteAdapterPosition
+                    getItem(absoluteAdapterPosition)
                 )
             }
 
             binding.buttonAddToCart.setOnClickListener {
-                OnButtonAddToCartListener?.invoke(getItem(absoluteAdapterPosition))
+                onButtonAddToCartListener?.invoke(getItem(absoluteAdapterPosition))
             }
-
-
-//            binding.buttonPlus.setOnClickListener {
-//                var count = binding.textPieces.text.toString().toInt()
-//                count++
-//                binding.productPrice.text =
-//                    (getItem(absoluteAdapterPosition).price * count).toString()
-//                binding.textPieces.text = count.toString()
-//                plusListener?.invoke(count)
-//            }
-//
-//            binding.buttonCheck.setOnClickListener {
-//                binding.buttonAddToCart.visibility = View.VISIBLE
-//                binding.containerPieces.visibility = View.GONE
-//                checkListener?.invoke(getItem(absoluteAdapterPosition))
-//            }
         }
 
         fun bind() {
@@ -65,7 +46,7 @@ class ProductAdapter :
 
     }
 
-    private object ProductDiffUtil : DiffUtil.ItemCallback<ProductData>() {
+    object ProductDiffUtil : DiffUtil.ItemCallback<ProductData>() {
         override fun areItemsTheSame(oldItem: ProductData, newItem: ProductData): Boolean {
             return oldItem.id == newItem.id
         }
@@ -80,8 +61,8 @@ class ProductAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         return ProductViewHolder(
-            ItemProductBinding.bind(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_product, parent, false)
+            ItemProductBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
             )
         )
     }
@@ -90,21 +71,11 @@ class ProductAdapter :
         holder.bind()
     }
 
-    fun setOnItemClickListener(block: ((ProductData, Int) -> Unit)) {
+    fun setOnItemClickListener(block: ((ProductData) -> Unit)?) {
         onItemClickListener = block
     }
 
-
     fun setOnButtonAddToCartListener(block: (ProductData) -> Unit) {
-        OnButtonAddToCartListener = block
+        onButtonAddToCartListener = block
     }
-
-//    fun setMinusListener(block: (Int) -> Unit) {
-//        minusListener = block
-//    }
-//
-//    fun setPlusListener(block: (Int) -> Unit) {
-//        plusListener = block
-//    }
-
 }

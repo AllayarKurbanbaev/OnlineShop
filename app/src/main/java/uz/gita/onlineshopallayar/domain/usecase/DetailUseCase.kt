@@ -6,7 +6,4 @@ import uz.gita.onlineshopallayar.data.remote.model.response.ProductResponse
 
 interface DetailUseCase {
     fun addProductToCart(product: ProductData): Flow<Result<Unit>>
-
-    fun getSingleProduct() : Flow<Result<ProductData>>
-
 }

@@ -11,7 +11,7 @@ data class CartEntity(
     val productDescription : String,
     val productPrice : Double,
     val userId : Int,
-    val quantity : Int,
+    var quantity : Int,
     val image : String
 ) {
     override fun equals(other: Any?): Boolean {

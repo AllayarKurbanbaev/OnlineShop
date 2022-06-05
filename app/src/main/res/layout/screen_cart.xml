@@ -5,24 +5,14 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
-
-    <!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-    <!--        android:id="@+id/swipeRefresh"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        app:layout_constraintBottom_toTopOf="@id/order"-->
-    <!--        app:layout_constraintTop_toTopOf="parent">-->
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listCart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clipToPadding="true"
         android:paddingTop="16dp"
         app:layout_constraintBottom_toTopOf="@id/order"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
-
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/order"

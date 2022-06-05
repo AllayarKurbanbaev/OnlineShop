@@ -14,10 +14,6 @@ interface AppRepository {
     suspend fun getAllProductsFromLocal(): List<ProductResponseEntity>
     suspend fun insertAllProducts(list: List<ProductResponseEntity>)
 
-    suspend fun getSingleProductFromLocal(): ProductResponseEntity
-
-    suspend fun getSingleProductFromNetwork(): Response<ProductResponse>
-
     suspend fun getAllCategories(): Response<CategoryResponse>
 
     suspend fun getSingleCategory(category: String): Response<List<ProductResponse>>
@@ -43,11 +39,6 @@ interface AppRepository {
 
     suspend fun addProductToCart(product: ProductData)
 
-    fun saveProductID(id: Int)
-
-    suspend fun increaseProductCount(id: Int)
-
-    suspend fun decreaseProductCount(id: Int)
-
-    suspend fun getProductCount(id: Int) : Int
 }
+
+
