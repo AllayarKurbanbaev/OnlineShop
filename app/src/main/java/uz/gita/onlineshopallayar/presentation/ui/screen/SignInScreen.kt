@@ -46,6 +46,7 @@ class SignInScreen : Fragment(R.layout.screen_signin) {
                     editTextPassword.text.toString()
                 )
             )
+            binding.buttonLogin.isEnabled = false
         }
 
         viewModel.errorLiveData.observe(this@SignInScreen, errorObserver)
@@ -66,7 +67,7 @@ class SignInScreen : Fragment(R.layout.screen_signin) {
         showToast(it)
     }
     private val loginButtonObserver = Observer<String> {
-
+        binding.buttonLogin.isEnabled = false
     }
     private val progressObserver = Observer<Boolean> {
         when (it) {

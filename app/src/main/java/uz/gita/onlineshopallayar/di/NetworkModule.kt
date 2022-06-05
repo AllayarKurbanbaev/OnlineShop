@@ -18,17 +18,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-    @[Provides Singleton]
-    fun getOkHTTPClientObject(@ApplicationContext context: Context): OkHttpClient =
-        OkHttpClient.Builder()
-            .addInterceptor(ChuckInterceptor(context))
-            .build()
+//    @[Provides Singleton]
+//    fun getOkHTTPClientObject(@ApplicationContext context: Context): OkHttpClient =
+//        OkHttpClient.Builder()
+//            .addInterceptor(ChuckInterceptor(context))
+//            .build()
 
     @[Provides Singleton]
-    fun getRetrofitObject(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+    fun getRetrofitObject(): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
-        .client(okHttpClient)
         .build()
 
     @[Provides Singleton]

@@ -2,55 +2,51 @@ package uz.gita.onlineshopallayar.presentation.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import timber.log.Timber
 import uz.gita.onlineshopallayar.R
 import uz.gita.onlineshopallayar.data.locale.entities.CartEntity
 import uz.gita.onlineshopallayar.databinding.ItemCartBinding
 
-
-class CartAdapter : ListAdapter<CartEntity, CartAdapter.CartViewHolder>(CartDiffUtil) {
+class CartAdapter : RecyclerView.Adapter<CartAdapter.TestViewHolder>() {
     private var minusListener: ((Int) -> Unit)? = null
     private var plusListener: ((Int) -> Unit)? = null
     private var deleteListener: ((CartEntity, Int) -> Unit)? = null
 
-    inner class CartViewHolder(private val binding: ItemCartBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    var list: MutableList<CartEntity> = mutableListOf()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
+
+    inner class TestViewHolder(private val binding: ItemCartBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         init {
 
             binding.buttonMinus.setOnClickListener {
-                if (getItem(absoluteAdapterPosition).quantity > 1) {
+                if (list[absoluteAdapterPosition].quantity > 1) {
                     minusListener?.invoke(absoluteAdapterPosition)
                 }
             }
 
             binding.buttonAdd.setOnClickListener {
-                if (!binding.buttonMinus.isEnabled) {
-                    binding.buttonMinus.isEnabled = true
-                }
                 plusListener?.invoke(absoluteAdapterPosition)
             }
 
             binding.buttonDelete.setOnClickListener {
                 deleteListener?.invoke(
-                    getItem(absoluteAdapterPosition),
+                    list[absoluteAdapterPosition],
                     absoluteAdapterPosition
                 )
             }
         }
 
         fun bind() {
-            if (getItem(absoluteAdapterPosition).quantity == 1) {
-                binding.buttonMinus.isEnabled = false
-            }
-            getItem(absoluteAdapterPosition).apply {
+            list[absoluteAdapterPosition].apply {
                 binding.textPriceTitle.text = "Price : ${productPrice}$"
                 binding.productName.text = productName
-                binding.textPrice.text = "${quantity * productPrice}$"
+                binding.textPrice.text = String.format("%.2f", quantity * productPrice) + "$"
                 binding.textPieces.text = quantity.toString()
                 Glide.with(binding.productImage)
                     .load(image)
@@ -60,33 +56,18 @@ class CartAdapter : ListAdapter<CartEntity, CartAdapter.CartViewHolder>(CartDiff
         }
     }
 
-    object CartDiffUtil : DiffUtil.ItemCallback<CartEntity>() {
-        override fun areItemsTheSame(
-            oldItem: CartEntity,
-            newItem: CartEntity
-        ): Boolean {
-            Timber.tag("DDD").d("oldItem.id == newItem.id -> ${oldItem.id == newItem.id}")
-            return oldItem.id == newItem.id
-        }
 
-        override fun areContentsTheSame(
-            oldItem: CartEntity,
-            newItem: CartEntity
-        ): Boolean {
-            return oldItem == newItem
-        }
-
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        return CartViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TestViewHolder {
+        return TestViewHolder(
             ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TestViewHolder, position: Int) {
         holder.bind()
     }
+
+    override fun getItemCount(): Int = list.size
 
     fun setMinusListener(block: (Int) -> Unit) {
         minusListener = block
@@ -99,4 +80,5 @@ class CartAdapter : ListAdapter<CartEntity, CartAdapter.CartViewHolder>(CartDiff
     fun setPlusListener(block: (Int) -> Unit) {
         plusListener = block
     }
+
 }

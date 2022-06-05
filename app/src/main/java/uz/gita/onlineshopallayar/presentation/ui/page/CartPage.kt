@@ -14,6 +14,7 @@ import uz.gita.onlineshopallayar.app.App
 import uz.gita.onlineshopallayar.data.locale.entities.CartEntity
 import uz.gita.onlineshopallayar.databinding.ScreenCartBinding
 import uz.gita.onlineshopallayar.presentation.ui.adapter.CartAdapter
+import uz.gita.onlineshopallayar.presentation.ui.adapter.CartAdapterOld
 import uz.gita.onlineshopallayar.presentation.viewmodel.CartViewModel
 import uz.gita.onlineshopallayar.presentation.viewmodel.impl.CartViewModelImpl
 import uz.gita.onlineshopallayar.utils.showToast
@@ -22,19 +23,20 @@ import uz.gita.onlineshopallayar.utils.showToast
 class CartPage : Fragment(R.layout.screen_cart) {
     private val binding by viewBinding(ScreenCartBinding::bind)
     private val viewModel: CartViewModel by viewModels<CartViewModelImpl>()
-    private val adapter: CartAdapter by lazy(LazyThreadSafetyMode.NONE) { CartAdapter() }
+    private val cartAdapter: CartAdapter by lazy(LazyThreadSafetyMode.NONE) { CartAdapter() }
+    private val cartAdapterOld: CartAdapterOld by lazy(LazyThreadSafetyMode.NONE) { CartAdapterOld() }
 
     @SuppressLint("FragmentLiveDataObserve")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
 
-        listCart.adapter = adapter
+        listCart.adapter = cartAdapterOld
         listCart.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.load()
 
-        adapter.setDeleteListener { data, pos -> viewModel.delete(data, pos) }
-        adapter.setMinusListener { viewModel.minusClick(it) }
-        adapter.setPlusListener { viewModel.plusClick(it) }
+        cartAdapterOld.setDeleteListener { data, pos -> viewModel.delete(data, pos) }
+        cartAdapterOld.setMinusListener { viewModel.minusClick(it) }
+        cartAdapterOld.setPlusListener { viewModel.plusClick(it) }
         order.setOnClickListener {
             viewModel.order()
         }
@@ -60,8 +62,8 @@ class CartPage : Fragment(R.layout.screen_cart) {
     }
 
     private val loadObserver = Observer<List<CartEntity>> {
-        adapter.submitList(it)
-        adapter.notifyDataSetChanged()
+        cartAdapterOld.submitList(it)
+        cartAdapterOld.notifyDataSetChanged()
     }
 
     private val errorObserver = Observer<String> {

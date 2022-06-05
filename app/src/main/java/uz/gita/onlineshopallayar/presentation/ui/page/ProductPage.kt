@@ -14,6 +14,7 @@ import uz.gita.onlineshopallayar.app.App
 import uz.gita.onlineshopallayar.data.ProductData
 import uz.gita.onlineshopallayar.databinding.ScreenAllProductsBinding
 import uz.gita.onlineshopallayar.presentation.ui.adapter.ProductAdapter
+import uz.gita.onlineshopallayar.presentation.ui.adapter.ProductAdapterOld
 import uz.gita.onlineshopallayar.presentation.viewmodel.ProductViewModel
 import uz.gita.onlineshopallayar.presentation.viewmodel.impl.ProductViewModelImpl
 import uz.gita.onlineshopallayar.utils.showToast
@@ -24,17 +25,18 @@ class ProductPage : Fragment(R.layout.screen_all_products) {
 
     private val binding by viewBinding(ScreenAllProductsBinding::bind)
     private val viewModel: ProductViewModel by viewModels<ProductViewModelImpl>()
-    private val adapter: ProductAdapter = ProductAdapter()
+    private val productAdapter: ProductAdapter = ProductAdapter()
+    private val productAdapterOld: ProductAdapterOld = ProductAdapterOld()
 
     @SuppressLint("FragmentLiveDataObserve")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
-        recyclerView.adapter = adapter
+        recyclerView.adapter = productAdapterOld
         recyclerView.layoutManager =
             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         swipeRefresh.setOnRefreshListener { viewModel.loadData() }
 
-        adapter.setOnButtonAddToCartListener { viewModel.addToCart(it) }
-        adapter.setOnItemClickListener { App.openDetailScreen(it) }
+        productAdapterOld.setOnButtonAddToCartListener { viewModel.addToCart(it) }
+        productAdapterOld.setOnItemClickListener { App.openDetailScreen(it) }
 
         viewModel.addCartLiveData.observe(this@ProductPage, addCartObserver)
         viewModel.errorLiveData.observe(this@ProductPage, errorObserver)
@@ -47,7 +49,8 @@ class ProductPage : Fragment(R.layout.screen_all_products) {
     }
 
     private val loadObserver = Observer<List<ProductData>> {
-        adapter.submitList(it)
+        productAdapterOld.submitList(it)
+        productAdapterOld.notifyDataSetChanged()
     }
 
     private val errorObserver = Observer<String> {

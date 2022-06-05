@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.OnlineShopAllayar" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="Theme.OnlineShopAllayar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#104E5B</item>
         <item name="colorPrimaryVariant">#3F7C88</item>
@@ -12,7 +12,7 @@
         <!-- Status bar color. -->
 
         <item name="android:textColorHint">@color/white</item>
-        <item name="tilcolor">#B3FFFFFF</item>
+        <item name="tilcolor">#B3645757</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>
