@@ -84,9 +84,7 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addProductToCart(product: ProductData) {
-
         Timber.tag("ZZZ").d(product.toString())
-
         val model: CartEntity = CartEntity(
             product.id,
             product.title,
@@ -96,8 +94,6 @@ class AppRepositoryImpl @Inject constructor(
             1,
             product.image
         )
-
-
         return cartDao.insert(model)
     }
 }

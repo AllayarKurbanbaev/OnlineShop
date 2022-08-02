@@ -7,7 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import uz.gita.onlineshopallayar.presentation.ui.page.CartPage
 import uz.gita.onlineshopallayar.presentation.ui.page.ProductPage
 
-class MainAdapter(
+class MainPageAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle
 ) :

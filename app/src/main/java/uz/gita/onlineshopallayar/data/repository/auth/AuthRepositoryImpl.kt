@@ -15,6 +15,7 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     override suspend fun signInUser(loginUserRequest: LoginRequest): Response<LoginResponse> {
+        Timber.tag("TTT").d(api.loginUser(loginUserRequest).toString())
         return api.loginUser(loginUserRequest)
     }
 

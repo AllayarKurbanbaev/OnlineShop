@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import uz.gita.onlineshopallayar.R
 import uz.gita.onlineshopallayar.app.App
 import uz.gita.onlineshopallayar.databinding.ScreenMainBinding
-import uz.gita.onlineshopallayar.presentation.ui.adapter.MainAdapter
+import uz.gita.onlineshopallayar.presentation.ui.adapter.MainPageAdapter
 import uz.gita.onlineshopallayar.presentation.viewmodel.MainViewModel
 import uz.gita.onlineshopallayar.presentation.viewmodel.impl.MainViewModelImpl
 
@@ -20,7 +20,7 @@ class MainScreen : Fragment(R.layout.screen_main) {
 
     private val binding by viewBinding(ScreenMainBinding::bind)
     private val viewModel: MainViewModel by viewModels<MainViewModelImpl>()
-    private lateinit var adapter: MainAdapter
+    private lateinit var adapter: MainPageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +33,7 @@ class MainScreen : Fragment(R.layout.screen_main) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
-        adapter = MainAdapter(childFragmentManager, lifecycle)
+        adapter = MainPageAdapter(childFragmentManager, lifecycle)
         viewpagerMain.isUserInputEnabled = false
         viewpagerMain.adapter = adapter
 
